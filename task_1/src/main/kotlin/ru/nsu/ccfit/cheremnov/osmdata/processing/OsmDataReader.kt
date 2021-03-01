@@ -4,5 +4,7 @@ import ru.nsu.ccfit.cheremnov.osmdata.model.Node
 
 
 interface OsmDataReader {
-    fun readAndProcessData(inputDataSource: InputDataSource, nodeProcessor: (Node) -> Unit)
+    fun readAndProcessData(dataSource: InputDataSource, nodeProcessor: (Node) -> Unit): Result<Unit>
 }
+
+class DataProcessingFailed(message: String): Exception(message)

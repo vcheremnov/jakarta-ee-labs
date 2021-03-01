@@ -4,5 +4,7 @@ import java.io.InputStream
 
 
 interface InputDataSource {
-    fun getInputDataStream(): InputStream
+    fun openInputDataStream(): Result<InputStream>
 }
+
+class InputDataStreamOpeningFailed(message: String): Exception(message)

@@ -1,11 +1,12 @@
 package ru.nsu.ccfit.cheremnov
 
 import org.apache.logging.log4j.LogManager
-import ru.nsu.ccfit.cheremnov.osmdata.processing.InputDataSource
-import ru.nsu.ccfit.cheremnov.osmdata.processing.OsmDataReader
 import ru.nsu.ccfit.cheremnov.osmdata.model.Node
 import ru.nsu.ccfit.cheremnov.osmdata.model.Tag
-import java.lang.RuntimeException
+import ru.nsu.ccfit.cheremnov.osmdata.processing.DataProcessingFailed
+import ru.nsu.ccfit.cheremnov.osmdata.processing.InputDataSource
+import ru.nsu.ccfit.cheremnov.osmdata.processing.OsmDataReader
+import java.io.InputStream
 import javax.xml.namespace.QName
 import javax.xml.stream.XMLInputFactory
 
@@ -21,60 +22,66 @@ class OsmXmlDataReader: OsmDataReader {
 
     private val logger = LogManager.getLogger()
 
-    override fun readAndProcessData(inputDataSource: InputDataSource, nodeProcessor: (Node) -> Unit) {
-        inputDataSource.getInputDataStream().use {
-            var tag: Tag? = null
-            var node: Node? = null
-            var nodeTags: MutableSet<Tag>? = null
+    override fun readAndProcessData(dataSource: InputDataSource, nodeProcessor: (Node) -> Unit): Result<Unit> {
+        return dataSource
+            .openInputDataStream()
+            .mapCatching { inputDataStream ->
+                inputDataStream.use { readAndProcessData(it, nodeProcessor) }
+            }
+    }
 
-            val xmlReader = XMLInputFactory.newInstance().createXMLEventReader(it)
-            while (xmlReader.hasNext()) {
-                val event = xmlReader.nextEvent()
-                if (event.isStartElement) {
-                    val startElement = event.asStartElement()
-                    when (startElement.name.localPart) {
-                        nodeElementName -> {
-                            if (node != null) {
-                                throw RuntimeException("Nested node has been encountered")
-                            }
+    private fun readAndProcessData(inputDataStream: InputStream, nodeProcessor: (Node) -> Unit) {
+        var tag: Tag? = null
+        var node: Node? = null
+        var nodeTags: MutableSet<Tag>? = null
 
-                            val user = startElement
-                                .getAttributeByName(QName(nodeUserAttributeName))?.value
-                                ?: throw RuntimeException("User was not specified in the node")
-
-                            nodeTags = mutableSetOf()
-                            node = Node(user, nodeTags)
+        val xmlReader = XMLInputFactory.newInstance().createXMLEventReader(inputDataStream)
+        while (xmlReader.hasNext()) {
+            val event = xmlReader.nextEvent()
+            if (event.isStartElement) {
+                val startElement = event.asStartElement()
+                when (startElement.name.localPart) {
+                    nodeElementName -> {
+                        if (node != null) {
+                            throw DataProcessingFailed("Nested node has been encountered")
                         }
 
-                        tagElementName -> {
-                            if (tag != null) {
-                                throw RuntimeException("Nested tag has been encountered")
-                            }
+                        val user = startElement
+                            .getAttributeByName(QName(nodeUserAttributeName))?.value
+                            ?: throw DataProcessingFailed("User is not specified in the node")
 
-                            if (node == null) {
-                                continue
-                            }
-
-                            val key = startElement
-                                .getAttributeByName(QName(tagKeyAttributeName))?.value
-                                ?: throw RuntimeException("Key was not specified in the tag")
-
-                            tag = Tag(key)
-                        }
+                        nodeTags = mutableSetOf()
+                        node = Node(user, nodeTags)
                     }
-                } else if (event.isEndElement) {
-                    val endElement = event.asEndElement()
-                    when (endElement.name.localPart) {
-                        nodeElementName -> {
-                            nodeProcessor(node!!)
-                            node = null
+
+                    tagElementName -> {
+                        if (tag != null) {
+                            throw DataProcessingFailed("Nested tag has been encountered")
                         }
 
-                        tagElementName -> {
-                            if (tag != null) {
-                                nodeTags!!.add(tag)
-                                tag = null
-                            }
+                        if (node == null) {
+                            continue
+                        }
+
+                        val key = startElement
+                            .getAttributeByName(QName(tagKeyAttributeName))?.value
+                            ?: throw DataProcessingFailed("Key is not specified in the tag")
+
+                        tag = Tag(key)
+                    }
+                }
+            } else if (event.isEndElement) {
+                val endElement = event.asEndElement()
+                when (endElement.name.localPart) {
+                    nodeElementName -> {
+                        nodeProcessor(node!!)
+                        node = null
+                    }
+
+                    tagElementName -> {
+                        if (tag != null) {
+                            nodeTags!!.add(tag)
+                            tag = null
                         }
                     }
                 }

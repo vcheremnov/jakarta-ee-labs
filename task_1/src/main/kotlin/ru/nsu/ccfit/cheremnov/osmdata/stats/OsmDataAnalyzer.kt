@@ -8,18 +8,16 @@ class OsmDataAnalyzer(
     private val dataReader: OsmDataReader,
 ) {
 
-    fun collectDataStats(inputDataSource: InputDataSource): OsmDataStats {
+    fun collectDataStats(inputDataSource: InputDataSource): Result<OsmDataStats> {
         val userEditsNumber = mutableMapOf<String, Long>()
         val tagUsagesNumber = mutableMapOf<String, Long>()
 
-        dataReader.readAndProcessData(inputDataSource) {
+        return dataReader.readAndProcessData(inputDataSource) {
             userEditsNumber.incrementValue(it.user)
             for (tag in it.tags) {
                 tagUsagesNumber.incrementValue(tag.key)
             }
-        }
-
-        return OsmDataStats(userEditsNumber, tagUsagesNumber)
+        }.map { OsmDataStats(userEditsNumber, tagUsagesNumber) }
     }
 
     private fun <K> MutableMap<K, Long>.incrementValue(key: K) {
