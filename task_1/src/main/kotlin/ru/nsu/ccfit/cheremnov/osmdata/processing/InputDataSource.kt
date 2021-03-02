@@ -7,4 +7,7 @@ interface InputDataSource {
     fun openInputDataStream(): Result<InputStream>
 }
 
-class InputDataStreamOpeningFailed(message: String): Exception(message)
+class InputDataStreamOpeningFailed(
+    message: String,
+    cause: Throwable? = null
+): Exception(message, cause)

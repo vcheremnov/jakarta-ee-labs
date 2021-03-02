@@ -7,4 +7,7 @@ interface OsmDataReader {
     fun readAndProcessData(dataSource: InputDataSource, nodeProcessor: (Node) -> Unit): Result<Unit>
 }
 
-class DataProcessingFailed(message: String): Exception(message)
+class DataProcessingFailed(
+    message: String,
+    cause: Throwable? = null
+): Exception(message, cause)

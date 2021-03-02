@@ -17,7 +17,11 @@ class OsmDataAnalyzer(
             for (tag in it.tags) {
                 tagUsagesNumber.incrementValue(tag.key)
             }
-        }.map { OsmDataStats(userEditsNumber, tagUsagesNumber) }
+        }.map {
+            OsmDataStats(userEditsNumber, tagUsagesNumber)
+        }.recoverCatching {
+            throw DataAnalysisFailed("Failed to collect data stats", it)
+        }
     }
 
     private fun <K> MutableMap<K, Long>.incrementValue(key: K) {
@@ -26,3 +30,9 @@ class OsmDataAnalyzer(
     }
 
 }
+
+class DataAnalysisFailed(
+    message: String,
+    cause: Throwable? = null
+): Exception(message, cause)
+

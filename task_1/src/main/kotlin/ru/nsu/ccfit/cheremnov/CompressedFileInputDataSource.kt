@@ -1,10 +1,9 @@
 package ru.nsu.ccfit.cheremnov
 
 import org.apache.commons.compress.compressors.CompressorStreamFactory
-import ru.nsu.ccfit.cheremnov.osmdata.processing.InputDataStreamOpeningFailed
 import ru.nsu.ccfit.cheremnov.osmdata.processing.InputDataSource
+import ru.nsu.ccfit.cheremnov.osmdata.processing.InputDataStreamOpeningFailed
 import java.io.File
-import java.io.FileNotFoundException
 import java.io.InputStream
 
 class CompressedFileInputDataSource(
@@ -18,11 +17,7 @@ class CompressedFileInputDataSource(
                 .buffered()
                 .let { CompressorStreamFactory().createCompressorInputStream(it) }
         }.recoverCatching {
-            if (it is FileNotFoundException) {
-                throw InputDataStreamOpeningFailed(
-                    "Failed to open file $inputFilepath: ${it.localizedMessage}"
-                )
-            } else throw it
+            throw InputDataStreamOpeningFailed("Failed to open input data file", it)
         }
 
 }

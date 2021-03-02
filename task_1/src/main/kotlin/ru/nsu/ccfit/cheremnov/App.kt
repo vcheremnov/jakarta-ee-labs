@@ -3,6 +3,7 @@ package ru.nsu.ccfit.cheremnov
 import ru.nsu.ccfit.cheremnov.osmdata.stats.OsmDataAnalyzer
 import ru.nsu.ccfit.cheremnov.osmdata.stats.OsmDataStatsPrinter
 
+
 fun main(args: Array<String>) {
     if (args.isEmpty()) {
         printUsage()
@@ -18,9 +19,21 @@ fun main(args: Array<String>) {
     dataAnalyzer
         .collectDataStats(inputDataSource)
         .onSuccess { dataStatsPrinter.printDataStats(it) }
-        .onFailure { println(it.localizedMessage) }
+        .onFailure {
+            it.printCauseMessageTrace()
+        }
 }
 
 private fun printUsage() {
-    println("Usage: ./gradlew run --args=\"<xml archive filename>\"")
+    System.err.println("Usage: ./gradlew run --args=\"<xml archive filename>\"")
 }
+
+private fun Throwable.printCauseMessageTrace(indent: String = "") {
+    if (cause == null) {
+        System.err.println("${indent}${localizedMessage}")
+    } else {
+        System.err.println("${indent}${localizedMessage}. Cause:")
+        cause!!.printCauseMessageTrace("${indent}\t")
+    }
+}
+

@@ -5,6 +5,7 @@ import ru.nsu.ccfit.cheremnov.osmdata.model.Node
 import ru.nsu.ccfit.cheremnov.osmdata.model.Tag
 import ru.nsu.ccfit.cheremnov.osmdata.processing.DataProcessingFailed
 import ru.nsu.ccfit.cheremnov.osmdata.processing.InputDataSource
+import ru.nsu.ccfit.cheremnov.osmdata.processing.InputDataStreamOpeningFailed
 import ru.nsu.ccfit.cheremnov.osmdata.processing.OsmDataReader
 import java.io.InputStream
 import javax.xml.namespace.QName
@@ -24,9 +25,21 @@ class OsmXmlDataReader: OsmDataReader {
 
     override fun readAndProcessData(dataSource: InputDataSource, nodeProcessor: (Node) -> Unit): Result<Unit> {
         return dataSource
+            .also { logger.info("Opening input data stream") }
             .openInputDataStream()
             .mapCatching { inputDataStream ->
+                logger.info("Started input data processing")
                 inputDataStream.use { readAndProcessData(it, nodeProcessor) }
+            }.recoverCatching {
+                val message = when (it) {
+                    is InputDataStreamOpeningFailed -> "Failed to open input data stream"
+                    else -> "Failed to process input data"
+                }
+                throw DataProcessingFailed(message, it)
+            }.onSuccess {
+                logger.info("Successfully processed input data")
+            }.onFailure {
+                logger.error(it.stackTraceToString())
             }
     }
 
