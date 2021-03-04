@@ -1,6 +1,6 @@
-package ru.nsu.ccfit.cheremnov.osmdata.processing
+package ru.nsu.ccfit.cheremnov.processing
 
-import ru.nsu.ccfit.cheremnov.osmdata.model.Node
+import ru.nsu.ccfit.cheremnov.model.Node
 
 
 interface OsmDataReader {

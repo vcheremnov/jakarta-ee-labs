@@ -1,12 +1,12 @@
 package ru.nsu.ccfit.cheremnov
 
 import org.apache.logging.log4j.LogManager
-import ru.nsu.ccfit.cheremnov.osmdata.model.Node
-import ru.nsu.ccfit.cheremnov.osmdata.model.Tag
-import ru.nsu.ccfit.cheremnov.osmdata.processing.DataProcessingFailed
-import ru.nsu.ccfit.cheremnov.osmdata.processing.InputDataSource
-import ru.nsu.ccfit.cheremnov.osmdata.processing.InputDataStreamOpeningFailed
-import ru.nsu.ccfit.cheremnov.osmdata.processing.OsmDataReader
+import ru.nsu.ccfit.cheremnov.model.Node
+import ru.nsu.ccfit.cheremnov.model.Tag
+import ru.nsu.ccfit.cheremnov.processing.DataProcessingFailed
+import ru.nsu.ccfit.cheremnov.processing.InputDataSource
+import ru.nsu.ccfit.cheremnov.processing.InputDataStreamOpeningFailed
+import ru.nsu.ccfit.cheremnov.processing.OsmDataReader
 import java.io.InputStream
 import javax.xml.namespace.QName
 import javax.xml.stream.XMLInputFactory

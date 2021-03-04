@@ -1,4 +1,4 @@
-package ru.nsu.ccfit.cheremnov.osmdata.stats
+package ru.nsu.ccfit.cheremnov.stats
 
 class OsmDataStatsPrinter {
 

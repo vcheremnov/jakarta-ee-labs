@@ -1,4 +1,4 @@
-package ru.nsu.ccfit.cheremnov.osmdata.processing
+package ru.nsu.ccfit.cheremnov.processing
 
 import java.io.InputStream
 

@@ -1,4 +1,4 @@
-package ru.nsu.ccfit.cheremnov.osmdata.stats
+package ru.nsu.ccfit.cheremnov.stats
 
 data class OsmDataStats(
     val userEditsNumber: Map<String, Long>,

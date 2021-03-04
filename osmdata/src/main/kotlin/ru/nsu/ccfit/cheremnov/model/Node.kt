@@ -1,4 +1,4 @@
-package ru.nsu.ccfit.cheremnov.osmdata.model
+package ru.nsu.ccfit.cheremnov.model
 
 data class Node(
     val user: String,

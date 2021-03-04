@@ -1,7 +1,7 @@
-package ru.nsu.ccfit.cheremnov.osmdata.stats
+package ru.nsu.ccfit.cheremnov.stats
 
-import ru.nsu.ccfit.cheremnov.osmdata.processing.InputDataSource
-import ru.nsu.ccfit.cheremnov.osmdata.processing.OsmDataReader
+import ru.nsu.ccfit.cheremnov.processing.InputDataSource
+import ru.nsu.ccfit.cheremnov.processing.OsmDataReader
 
 
 class OsmDataAnalyzer(
