@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="node" type="XmlNode"/>
+
+    <xs:complexType name="XmlNode">
+        <xs:sequence>
+            <xs:element name="tag" type="XmlTag" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute type="xs:long" name="id"/>
+        <xs:attribute type="xs:int" name="version"/>
+        <xs:attribute type="xs:dateTime" name="timestamp"/>
+        <xs:attribute type="xs:long" name="uid"/>
+        <xs:attribute type="xs:string" name="user"/>
+        <xs:attribute type="xs:long" name="changeset"/>
+        <xs:attribute type="xs:double" name="lat"/>
+        <xs:attribute type="xs:double" name="lon"/>
+    </xs:complexType>
+
+    <xs:complexType name="XmlTag">
+        <xs:attribute type="xs:string" name="k"/>
+        <xs:attribute type="xs:string" name="v"/>
+    </xs:complexType>
+
+</xs:schema>

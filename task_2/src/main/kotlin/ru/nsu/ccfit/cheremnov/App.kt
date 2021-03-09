@@ -25,7 +25,7 @@ fun main(args: Array<String>) {
 }
 
 private fun printUsage() {
-    System.err.println("Usage: ./gradlew task_1:run --args=\"<xml archive filepath>\"")
+    System.err.println("Usage: ./gradlew task_2:run --args=\"<xml archive filepath>\"")
 }
 
 private fun Throwable.printMessageTrace(indent: String = "") {

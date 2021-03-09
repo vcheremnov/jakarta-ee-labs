@@ -1,8 +1,6 @@
-package ru.nsu.ccfit.cheremnov
+package ru.nsu.ccfit.cheremnov.processing
 
 import org.apache.commons.compress.compressors.CompressorStreamFactory
-import ru.nsu.ccfit.cheremnov.processing.InputDataSource
-import ru.nsu.ccfit.cheremnov.processing.InputDataStreamOpeningFailed
 import java.io.File
 import java.io.InputStream
 
