@@ -13,7 +13,7 @@ class OsmDataAnalyzer(
         val tagUsagesNumber = mutableMapOf<String, Long>()
 
         return dataReader.readAndProcessData(inputDataSource) {
-            userEditsNumber.incrementValue(it.user)
+            userEditsNumber.incrementValue(it.username)
             for (tag in it.tags) {
                 tagUsagesNumber.incrementValue(tag.key)
             }

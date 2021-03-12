@@ -17,8 +17,7 @@ class OsmXmlDataReader: AbstractOsmXmlDataReader() {
 
     override fun readAndProcessData(inputDataStream: InputStream, nodeProcessor: (Node) -> Unit) {
         val xmlNodeClass = XmlNode::class.java
-        val jc = JAXBContext.newInstance(xmlNodeClass)
-        val unmarshaller = jc.createUnmarshaller()
+        val unmarshaller = JAXBContext.newInstance(xmlNodeClass).createUnmarshaller()
         val xmlReader = XMLInputFactory.newInstance().createXMLStreamReader(inputDataStream)
 
         while (xmlReader.hasNext()) {
@@ -36,11 +35,15 @@ class OsmXmlDataReader: AbstractOsmXmlDataReader() {
 
 private fun XmlNode.toNode() =
     Node(
-        user = user,
+        id = id,
+        username = user,
+        latitude = lat,
+        longitude = lon,
         tags = tag.map(XmlTag::toTag)
     )
 
 private fun XmlTag.toTag() =
     Tag(
-        key = k
+        key = k,
+        value = v
     )

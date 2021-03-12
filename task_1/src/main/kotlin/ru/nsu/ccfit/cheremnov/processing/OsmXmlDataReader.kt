@@ -7,6 +7,7 @@ import ru.nsu.ccfit.cheremnov.model.Tag
 import java.io.InputStream
 import javax.xml.namespace.QName
 import javax.xml.stream.XMLInputFactory
+import javax.xml.stream.events.StartElement
 
 
 class OsmXmlDataReader: AbstractOsmXmlDataReader() {
@@ -29,12 +30,8 @@ class OsmXmlDataReader: AbstractOsmXmlDataReader() {
                             throw DataProcessingFailed("Nested node has been encountered")
                         }
 
-                        val user = startElement
-                            .getAttributeByName(QName(nodeUserAttributeName))?.value
-                            ?: throw DataProcessingFailed("User is not specified in the node")
-
                         nodeTags = mutableListOf()
-                        node = Node(user, nodeTags)
+                        node = startElement.retrieveNode(nodeTags)
                     }
 
                     tagElementName -> {
@@ -46,11 +43,7 @@ class OsmXmlDataReader: AbstractOsmXmlDataReader() {
                             continue
                         }
 
-                        val key = startElement
-                            .getAttributeByName(QName(tagKeyAttributeName))?.value
-                            ?: throw DataProcessingFailed("Key is not specified in the tag")
-
-                        tag = Tag(key)
+                        tag = startElement.retrieveTag()
                     }
                 }
             } else if (event.isEndElement) {
@@ -71,5 +64,39 @@ class OsmXmlDataReader: AbstractOsmXmlDataReader() {
             }
         }
     }
+
+    private fun StartElement.retrieveNode(emptyTagsList: List<Tag>): Node =
+        retrieveAttributes(
+            nodeIdAttributeName,
+            nodeUserAttributeName,
+            nodeLatitudeAttributeName,
+            nodeLongitudeAttributeName
+        ).let {
+            Node(
+                id = it[nodeIdAttributeName]!!.toLong(),
+                username = it[nodeUserAttributeName]!!,
+                latitude = it[nodeLatitudeAttributeName]!!.toDouble(),
+                longitude = it[nodeLongitudeAttributeName]!!.toDouble(),
+                tags = emptyTagsList
+            )
+        }
+
+    private fun StartElement.retrieveTag(): Tag =
+        retrieveAttributes(
+            tagKeyAttributeName,
+            tagValueAttributeName
+        ).let {
+            Tag(
+                key = it[tagKeyAttributeName]!!,
+                value = it[tagValueAttributeName]!!
+            )
+        }
+
+    private fun StartElement.retrieveAttributes(vararg attributeNames: String): Map<String, String> =
+        attributeNames.map {
+            val attributeValue = getAttributeByName(QName(it))?.value
+                ?: throw DataProcessingFailed("Attribute \"$it\" is not specified in the ${name.localPart}")
+            it to attributeValue
+        }.toMap()
 
 }

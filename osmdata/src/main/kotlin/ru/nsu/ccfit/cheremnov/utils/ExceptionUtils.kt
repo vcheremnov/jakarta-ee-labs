@@ -1,4 +1,4 @@
-package ru.nsu.ccfit.cheremnov.exceptions
+package ru.nsu.ccfit.cheremnov.utils
 
 fun Throwable.printMessageTrace(indent: String = "") {
     if (cause == null) {

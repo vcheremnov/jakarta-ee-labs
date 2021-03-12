@@ -9,8 +9,14 @@ abstract class AbstractOsmXmlDataReader: OsmDataReader {
     protected companion object {
         const val nodeElementName = "node"
         const val tagElementName = "tag"
+
+        const val nodeIdAttributeName = "id"
         const val nodeUserAttributeName = "user"
+        const val nodeLatitudeAttributeName = "lat"
+        const val nodeLongitudeAttributeName = "lon"
+
         const val tagKeyAttributeName = "k"
+        const val tagValueAttributeName = "v"
     }
 
     protected abstract val logger: Logger

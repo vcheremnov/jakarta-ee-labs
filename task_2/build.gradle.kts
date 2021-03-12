@@ -11,10 +11,12 @@ application {
 
 dependencies {
     implementation(kotlin("stdlib"))
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jre8:1.2.71")
     implementation(project(":osmdata"))
 
     implementation("org.apache.logging.log4j:log4j-api:2.14.0")
     implementation("org.apache.logging.log4j:log4j-core:2.14.0")
+    implementation("org.postgresql:postgresql:42.2.19")
 
     implementation("javax.xml.bind:jaxb-api:2.3.1")
     implementation("org.glassfish.jaxb:jaxb-runtime:2.3.1")
