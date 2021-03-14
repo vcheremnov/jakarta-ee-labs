@@ -9,7 +9,7 @@ class JdbcDatabaseInitializer(
 ): DatabaseInitializer {
 
     companion object {
-        private const val schemaSqlFilename = "schema.sql"
+        private const val schemaSqlFilename = "db_schema.sql"
     }
 
     private val transactionService = JdbcTransactionService(connection)
