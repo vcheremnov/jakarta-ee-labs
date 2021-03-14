@@ -1,4 +1,4 @@
-package ru.nsu.ccfit.cheremnov.processing
+package ru.nsu.ccfit.cheremnov.dataprocessing
 
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
@@ -33,7 +33,7 @@ class OsmXmlDataReader: AbstractOsmXmlDataReader() {
 
 }
 
-private fun XmlNode.toNode() =
+private fun XmlNode.toNode(): Node =
     Node(
         id = id,
         username = user,
@@ -42,7 +42,7 @@ private fun XmlNode.toNode() =
         tags = tag.map(XmlTag::toTag)
     )
 
-private fun XmlTag.toTag() =
+private fun XmlTag.toTag(): Tag =
     Tag(
         key = k,
         value = v

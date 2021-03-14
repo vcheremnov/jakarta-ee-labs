@@ -5,11 +5,11 @@ import java.sql.DriverManager
 
 object JdbcDataSource {
 
-    fun createConnection(autoCommit: Boolean = false): Connection =
+    fun createConnection(): Connection =
         DriverManager.getConnection(
             DatasourceConfig.datasourceUrl,
             DatasourceConfig.datasourceUsername,
             DatasourceConfig.datasourcePassword
-        ).apply { this.autoCommit = autoCommit }
+        )
 
 }

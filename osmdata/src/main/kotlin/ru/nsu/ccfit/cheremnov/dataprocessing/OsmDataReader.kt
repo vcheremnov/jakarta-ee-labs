@@ -1,4 +1,4 @@
-package ru.nsu.ccfit.cheremnov.processing
+package ru.nsu.ccfit.cheremnov.dataprocessing
 
 import ru.nsu.ccfit.cheremnov.model.Node
 

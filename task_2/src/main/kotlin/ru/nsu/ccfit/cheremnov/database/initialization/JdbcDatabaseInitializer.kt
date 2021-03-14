@@ -1,29 +1,33 @@
-package ru.nsu.ccfit.cheremnov.database
+package ru.nsu.ccfit.cheremnov.database.initialization
 
-import java.io.Closeable
+import ru.nsu.ccfit.cheremnov.database.transactions.JdbcTransactionService
 import java.sql.Connection
 import java.sql.Statement
 
-class DatabaseInitializer(
+class JdbcDatabaseInitializer(
     connection: Connection
-): Closeable {
+): DatabaseInitializer {
 
     companion object {
         private const val schemaSqlFilename = "schema.sql"
     }
 
+    private val transactionService = JdbcTransactionService(connection)
+
     private val initSchemaStatement: Statement = connection.createStatement()
 
     private val schemaSql: String =
-        DatabaseInitializer::class.java
+        JdbcDatabaseInitializer::class.java
             .classLoader
             .getResourceAsStream(schemaSqlFilename)
             ?.use {
                 it.reader().readText()
             } ?: throw RuntimeException("Failed to load \"$schemaSqlFilename\"")
 
-    fun initializeDatabase() {
-        initSchemaStatement.executeUpdate(schemaSql)
+    override fun initializeDatabase() {
+        transactionService.performTransaction {
+            initSchemaStatement.executeUpdate(schemaSql)
+        }
     }
 
     override fun close() {

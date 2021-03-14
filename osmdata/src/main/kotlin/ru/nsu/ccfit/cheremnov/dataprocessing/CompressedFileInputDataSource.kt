@@ -1,4 +1,4 @@
-package ru.nsu.ccfit.cheremnov.processing
+package ru.nsu.ccfit.cheremnov.dataprocessing
 
 import org.apache.commons.compress.compressors.CompressorStreamFactory
 import java.io.File

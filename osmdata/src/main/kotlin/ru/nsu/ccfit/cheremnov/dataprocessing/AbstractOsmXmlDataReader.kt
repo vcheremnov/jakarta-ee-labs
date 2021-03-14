@@ -1,4 +1,4 @@
-package ru.nsu.ccfit.cheremnov.processing
+package ru.nsu.ccfit.cheremnov.dataprocessing
 
 import org.apache.logging.log4j.Logger
 import ru.nsu.ccfit.cheremnov.model.Node
