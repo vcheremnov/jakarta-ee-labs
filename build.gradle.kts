@@ -15,7 +15,8 @@ allprojects {
 
     tasks.withType<KotlinCompile> {
         kotlinOptions {
-            freeCompilerArgs = freeCompilerArgs + "-Xallow-result-return-type"
+            freeCompilerArgs = listOf("-Xjsr305=strict", "-Xallow-result-return-type")
+            jvmTarget = "11"
         }
     }
 }
