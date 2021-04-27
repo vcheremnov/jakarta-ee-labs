@@ -6,10 +6,21 @@ import java.sql.DriverManager
 object JdbcDataSource {
 
     fun createConnection(): Connection =
-        DriverManager.getConnection(
+        createConnection(
             DatasourceConfig.datasourceUrl,
             DatasourceConfig.datasourceUsername,
             DatasourceConfig.datasourcePassword
+        )
+
+    fun createConnection(
+        datasourceUrl: String,
+        datasourceUsername: String,
+        datasourcePassword: String
+    ): Connection =
+        DriverManager.getConnection(
+            datasourceUrl,
+            datasourceUsername,
+            datasourcePassword
         )
 
 }

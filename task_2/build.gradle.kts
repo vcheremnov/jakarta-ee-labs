@@ -6,7 +6,7 @@ plugins {
 }
 
 application {
-    mainClassName = "${group}.AppKt"
+    mainClassName = "${group}.${rootProject.name}.AppKt"
 }
 
 dependencies {

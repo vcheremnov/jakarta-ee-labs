@@ -4,9 +4,9 @@ import ru.nsu.ccfit.cheremnov.osm.database.transactions.JdbcTransactionService
 import java.sql.Connection
 import java.sql.Statement
 
-class JdbcDatabaseInitializer(
+class JdbcDatabaseSchemaInitializer(
     connection: Connection
-): DatabaseInitializer {
+): DatabaseSchemaInitializer {
 
     companion object {
         private const val schemaSqlFilename = "db_schema.sql"
@@ -17,7 +17,7 @@ class JdbcDatabaseInitializer(
     private val initSchemaStatement: Statement = connection.createStatement()
 
     private val schemaSql: String =
-        JdbcDatabaseInitializer::class.java
+        JdbcDatabaseSchemaInitializer::class.java
             .classLoader
             .getResourceAsStream(schemaSqlFilename)
             ?.use {

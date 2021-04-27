@@ -11,12 +11,12 @@ import javax.xml.bind.JAXBContext
 import javax.xml.stream.XMLInputFactory
 
 
-class OsmXmlDataReader: ru.nsu.ccfit.cheremnov.osm.dataprocessing.AbstractOsmXmlDataReader() {
+class OsmXmlDataReader: AbstractOsmXmlDataReader() {
 
     override val logger: Logger = LogManager.getLogger()
 
     override fun readAndProcessData(inputDataStream: InputStream, nodeProcessor: (Node) -> Unit) {
-        val xmlNodeClass = ru.nsu.ccfit.cheremnov.osm.model.generated.XmlNode::class.java
+        val xmlNodeClass = XmlNode::class.java
         val unmarshaller = JAXBContext.newInstance(xmlNodeClass).createUnmarshaller()
         val xmlReader = XMLInputFactory.newInstance().createXMLStreamReader(inputDataStream)
 
@@ -39,7 +39,7 @@ private fun XmlNode.toNode(): Node =
         username = user,
         latitude = lat,
         longitude = lon,
-        tags = tag.map(ru.nsu.ccfit.cheremnov.osm.model.generated.XmlTag::toTag)
+        tags = tag.map(XmlTag::toTag)
     )
 
 private fun XmlTag.toTag(): Tag =

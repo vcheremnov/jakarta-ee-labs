@@ -1,6 +1,6 @@
 package ru.nsu.ccfit.cheremnov.osm.benchmarks
 
-import ru.nsu.ccfit.cheremnov.osm.database.initialization.DatabaseInitializer
+import ru.nsu.ccfit.cheremnov.osm.database.initialization.DatabaseSchemaInitializer
 import ru.nsu.ccfit.cheremnov.osm.database.services.NodeService
 import ru.nsu.ccfit.cheremnov.osm.dataprocessing.InputDataSource
 import ru.nsu.ccfit.cheremnov.osm.dataprocessing.OsmDataReader
@@ -8,7 +8,7 @@ import ru.nsu.ccfit.cheremnov.osm.model.Node
 import kotlin.system.measureTimeMillis
 
 class InsertPerformanceTester(
-    private val databaseInitializer: DatabaseInitializer,
+    private val databaseSchemaInitializer: DatabaseSchemaInitializer,
     private val nodeService: NodeService,
     private val dataReader: OsmDataReader,
     private val inputDataSource: InputDataSource
@@ -50,7 +50,7 @@ class InsertPerformanceTester(
 
     private fun performInsertTest(message: String, testBody: () -> Unit) {
         println(message)
-        databaseInitializer.initializeDatabase()
+        databaseSchemaInitializer.initializeDatabase()
         measureTimeMillis {
             testBody()
         }.let {
