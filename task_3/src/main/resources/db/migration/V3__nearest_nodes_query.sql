@@ -11,7 +11,7 @@ AS '
     );'
 LANGUAGE SQL;
 
-CREATE FUNCTION first_fix_point_distance(
+CREATE FUNCTION first_fixed_point_distance(
     latitude double precision,
     longitude double precision
 ) RETURNS double precision
@@ -20,7 +20,7 @@ AS '
 ;'
 LANGUAGE SQL;
 
-CREATE FUNCTION second_fix_point_distance(
+CREATE FUNCTION second_fixed_point_distance(
     latitude double precision,
     longitude double precision
 ) RETURNS double precision
@@ -29,10 +29,10 @@ AS '
 ;'
 LANGUAGE SQL;
 
-CREATE INDEX first_fix_point_distance_index
-    ON nodes (first_fix_point_distance(latitude, longitude));
-CREATE INDEX second_fix_point_distance_index
-    ON nodes (second_fix_point_distance(latitude, longitude));
+CREATE INDEX first_fixed_point_distance_index
+    ON nodes (first_fixed_point_distance(latitude, longitude));
+CREATE INDEX second_fixed_point_distance_index
+    ON nodes (second_fixed_point_distance(latitude, longitude));
 
 CREATE FUNCTION find_nearest_nodes(
     lat double precision,
@@ -42,10 +42,10 @@ CREATE FUNCTION find_nearest_nodes(
 AS '
     select * from (
         select * from nodes
-        where first_fix_point_distance(latitude, longitude)
-            between first_fix_point_distance(lat, lon) - radius and first_fix_point_distance(lat, lon) + radius
-        and second_fix_point_distance(latitude, longitude)
-            between second_fix_point_distance(lat, lon) - radius and second_fix_point_distance(lat, lon) + radius
+        where first_fixed_point_distance(latitude, longitude)
+            between first_fixed_point_distance(lat, lon) - radius and first_fixed_point_distance(lat, lon) + radius
+        and second_fixed_point_distance(latitude, longitude)
+            between second_fixed_point_distance(lat, lon) - radius and second_fixed_point_distance(lat, lon) + radius
     ) as nearest_nodes
     where points_distance(nearest_nodes.latitude, nearest_nodes.longitude, lat, lon) < radius
 ;'
