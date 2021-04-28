@@ -6,8 +6,8 @@ data class OsmErrorResponse(
     val path: String,
     val errorCode: String,
     val timestamp: LocalDateTime,
-    val message: String? = null,
-    val subErrors: List<OsmSubError>? = null
+    val message: String?,
+    val subErrors: List<OsmSubError>
 )
 
 interface OsmSubError

@@ -15,13 +15,12 @@ class JpaNodeRepository(
 
     @Transactional
     override fun create(node: Node): Boolean {
-        val nodeExists = entityManager.find(Node::class.java, node.id) != null
-        if (nodeExists) {
-            return false
+        val nodeDoesNotExist = entityManager.find(Node::class.java, node.id) == null
+        if (nodeDoesNotExist) {
+            entityManager.persist(node)
         }
 
-        entityManager.persist(node)
-        return true
+        return nodeDoesNotExist
     }
 
     override fun find(nodeId: Long): Node? =
@@ -49,9 +48,7 @@ class JpaNodeRepository(
 
     override fun count(): Long {
         val query = "select count(n) from Node n"
-        return entityManager
-            .createQuery(query, java.lang.Long::class.java)
-            .singleResult as Long
+        return entityManager.createQuery(query).singleResult as Long
     }
 
 }

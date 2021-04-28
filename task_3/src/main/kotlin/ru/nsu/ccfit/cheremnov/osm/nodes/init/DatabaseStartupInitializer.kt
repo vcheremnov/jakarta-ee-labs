@@ -32,11 +32,9 @@ class DatabaseStartupInitializer(
 
     override fun run(vararg args: String) {
         val nodesCount = nodeRepository.count()
-        if (nodesCount > 0) {
-            return
+        if (nodesCount == 0L) {
+            databaseInitializer.run()
         }
-
-        databaseInitializer.run()
     }
 
 }

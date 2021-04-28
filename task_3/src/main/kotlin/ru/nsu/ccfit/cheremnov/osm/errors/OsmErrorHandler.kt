@@ -68,7 +68,7 @@ class OsmErrorHandler {
         responseStatus: HttpStatus,
         errorCode: String,
         message: String? = null,
-        subErrors: List<OsmSubError>? = null
+        subErrors: List<OsmSubError> = emptyList()
     ): ResponseEntity<*> =
         ResponseEntity
             .status(responseStatus)
