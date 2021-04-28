@@ -5,7 +5,6 @@ import ru.nsu.ccfit.cheremnov.osm.database.services.NodeService
 import ru.nsu.ccfit.cheremnov.osm.dataprocessing.InputDataSource
 import ru.nsu.ccfit.cheremnov.osm.dataprocessing.OsmDataReader
 import ru.nsu.ccfit.cheremnov.osm.model.Node
-import kotlin.system.measureTimeMillis
 
 class InsertPerformanceTester(
     private val databaseSchemaInitializer: DatabaseSchemaInitializer,
@@ -19,42 +18,38 @@ class InsertPerformanceTester(
     }
 
     fun performInsertTests() {
-        performInsertTest("Batch insert test:") {
-            val batch = arrayListOf<Node>()
-
-            dataReader.readAndProcessData(inputDataSource) {
-                batch.add(it)
-                if (batch.size == batchSize) {
-                    nodeService.insertBatch(batch)
-                    batch.clear()
-                }
-            }
-
-            if (batch.isNotEmpty()) {
-                nodeService.insertBatch(batch)
-            }
-        }
-
-        performInsertTest("Prepared insert test:") {
-            dataReader.readAndProcessData(inputDataSource) {
-                nodeService.insert(it)
-            }
-        }
-
-        performInsertTest("Plain insert test:") {
-            dataReader.readAndProcessData(inputDataSource) {
-                nodeService.insert(it)
-            }
-        }
+        performInsertTest("Batch insert test:", nodeService::insertBatch)
+        performInsertTest("Prepared insert test:", nodeService::insertPrepared)
+        performInsertTest("Plain insert test:", nodeService::insert)
     }
 
-    private fun performInsertTest(message: String, testBody: () -> Unit) {
+    private fun performInsertTest(message: String, insertMethod: (Collection<Node>) -> Unit) {
         println(message)
         databaseSchemaInitializer.initializeDatabase()
-        measureTimeMillis {
-            testBody()
-        }.let {
-            println("Elapsed time: ${"%.3fs".format(it / 1000.0)}\n")
-        }
+
+        var nodesInserted = 0L
+        val beginTime = System.currentTimeMillis()
+        val batch = arrayListOf<Node>()
+        dataReader.readAndProcessData(inputDataSource) {
+            batch.add(it)
+            if (batch.size == batchSize) {
+                insertMethod(batch)
+                nodesInserted += batch.size
+                batch.clear()
+                showProgress(nodesInserted, beginTime)
+            }
+        }.onSuccess {
+            if (batch.isNotEmpty()) {
+                nodeService.insertBatch(batch)
+                nodesInserted += batch.size
+                showProgress(nodesInserted, beginTime)
+            }
+            println("Test has been finished\n")
+        }.getOrThrow()
+    }
+
+    private fun showProgress(nodesInserted: Long, beginTime: Long) {
+        val elapsedTime = (System.currentTimeMillis() - beginTime) / 1000.0
+        println("Nodes inserted: $nodesInserted, elapsed time: ${"%.3fs".format(elapsedTime)}")
     }
 }

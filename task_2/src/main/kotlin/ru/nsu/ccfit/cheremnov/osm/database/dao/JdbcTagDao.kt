@@ -1,5 +1,6 @@
 package ru.nsu.ccfit.cheremnov.osm.database.dao
 
+import ru.nsu.ccfit.cheremnov.osm.database.escapeQuotes
 import ru.nsu.ccfit.cheremnov.osm.database.model.DbTag
 import java.sql.Connection
 import java.sql.PreparedStatement
@@ -42,7 +43,7 @@ class JdbcTagDao(
     override fun insert(tag: DbTag) {
         insertStatement.executeUpdate("""
             insert into tags(node_id, key, value)
-            values (${tag.nodeId}, '${tag.key}', '${tag.value}')
+            values (${tag.nodeId}, '${tag.key.escapeQuotes()}', '${tag.value.escapeQuotes()}')
         """.trimIndent())
     }
 

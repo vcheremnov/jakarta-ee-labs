@@ -1,5 +1,6 @@
 package ru.nsu.ccfit.cheremnov.osm.database.dao
 
+import ru.nsu.ccfit.cheremnov.osm.database.escapeQuotes
 import ru.nsu.ccfit.cheremnov.osm.database.model.DbNode
 import java.sql.Connection
 import java.sql.PreparedStatement
@@ -38,7 +39,7 @@ class JdbcNodeDao(
     override fun insert(node: DbNode) {
         insertStatement.executeUpdate("""
             insert into nodes(id, username, latitude, longitude)
-            values (${node.id}, '${node.username}', ${node.latitude}, ${node.longitude})
+            values (${node.id}, '${node.username.escapeQuotes()}', ${node.latitude}, ${node.longitude})
         """.trimIndent())
     }
 

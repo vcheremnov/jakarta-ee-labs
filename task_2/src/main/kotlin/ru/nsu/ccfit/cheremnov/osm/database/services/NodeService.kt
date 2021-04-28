@@ -7,9 +7,9 @@ interface NodeService: Closeable {
 
     fun get(id: Long): Node?
 
-    fun insert(node: Node)
+    fun insert(nodes: Collection<Node>)
 
-    fun insertPrepared(node: Node)
+    fun insertPrepared(nodes: Collection<Node>)
 
     fun insertBatch(nodes: Collection<Node>)
 

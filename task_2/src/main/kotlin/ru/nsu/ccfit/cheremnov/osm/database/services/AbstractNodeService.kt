@@ -23,18 +23,26 @@ abstract class AbstractNodeService: NodeService {
         }
     }
 
-    override fun insert(node: Node) {
+    override fun insert(nodes: Collection<Node>) {
         transactionService.performTransaction {
-            nodeDao.insert(node.toDbNode())
-            node.getDbTags()
+            nodes
+                .map(Node::toDbNode)
+                .forEach { nodeDao.insert(it) }
+
+            nodes
+                .flatMap(Node::getDbTags)
                 .forEach { tagDao.insert(it) }
         }
     }
 
-    override fun insertPrepared(node: Node) {
+    override fun insertPrepared(nodes: Collection<Node>) {
         transactionService.performTransaction {
-            nodeDao.insertPrepared(node.toDbNode())
-            node.getDbTags()
+            nodes
+                .map(Node::toDbNode)
+                .forEach { nodeDao.insertPrepared(it) }
+
+            nodes
+                .flatMap(Node::getDbTags)
                 .forEach { tagDao.insertPrepared(it) }
         }
     }
